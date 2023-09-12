@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechTreeWebApplication.Data;
 
@@ -11,9 +12,11 @@ using TechTreeWebApplication.Data;
 namespace TechTreeWebApplication.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230912083250_ModifyLengthAspNetUsersCustomFields")]
+    partial class ModifyLengthAspNetUsersCustomFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,140 +252,6 @@ namespace TechTreeWebApplication.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TechTreeWebApplication.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThumbnailImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Category");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.CategoryItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTimeRealeased")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MediaTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("MediaTypeId");
-
-                    b.ToTable("CategoryItem");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.Content", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("HTMLContent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("VideoLink")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryItemId");
-
-                    b.ToTable("Content");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.MediaType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ThumbnailImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MediaType");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.UserCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserCategory");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -432,64 +301,6 @@ namespace TechTreeWebApplication.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.CategoryItem", b =>
-                {
-                    b.HasOne("TechTreeWebApplication.Entities.Category", null)
-                        .WithMany("CategoryItems")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TechTreeWebApplication.Entities.MediaType", null)
-                        .WithMany("CategoryItems")
-                        .HasForeignKey("MediaTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.Content", b =>
-                {
-                    b.HasOne("TechTreeWebApplication.Entities.CategoryItem", "CategoryItem")
-                        .WithMany()
-                        .HasForeignKey("CategoryItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CategoryItem");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.UserCategory", b =>
-                {
-                    b.HasOne("TechTreeWebApplication.Entities.Category", null)
-                        .WithMany("UserCategory")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TechTreeWebApplication.Data.ApplicationUser", null)
-                        .WithMany("UserCategory")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Data.ApplicationUser", b =>
-                {
-                    b.Navigation("UserCategory");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.Category", b =>
-                {
-                    b.Navigation("CategoryItems");
-
-                    b.Navigation("UserCategory");
-                });
-
-            modelBuilder.Entity("TechTreeWebApplication.Entities.MediaType", b =>
-                {
-                    b.Navigation("CategoryItems");
                 });
 #pragma warning restore 612, 618
         }
